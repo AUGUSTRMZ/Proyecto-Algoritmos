@@ -1,73 +1,116 @@
-#include "estudiante.h" // Se incluye el archivo de cabecera que contiene las funciones y la estructura
+#include <iostream>
+#include <vector>
+#include "estudiante.h"
+
 using namespace std;
+
+// Función para ordenar los estudiantes por nombre (alfabéticamente)
+void bubbleSortNombre(vector<Estudiante> &estudiantes)
+{
+    for (size_t i = 0; i < estudiantes.size() - 1; i++)
+    {
+        for (size_t j = 0; j < estudiantes.size() - i - 1; j++)
+        {
+            if (estudiantes[j].nombre > estudiantes[j + 1].nombre)
+            {
+                swap(estudiantes[j], estudiantes[j + 1]);
+            }
+        }
+    }
+    cout << "Estudiantes ordenados alfabéticamente con exito!.\n";
+}
+
+// Función para ordenar los estudiantes por calificación
+void bubbleSortCalificacion(vector<Estudiante> &estudiantes)
+{
+    for (size_t i = 0; i < estudiantes.size() - 1; i++)
+    {
+        for (size_t j = 0; j < estudiantes.size() - i - 1; j++)
+        {
+            if (estudiantes[j].calificacion > estudiantes[j + 1].calificacion)
+            {
+                swap(estudiantes[j], estudiantes[j + 1]);
+            }
+        }
+    }
+    cout << "Estudiantes ordenados por calificación con exito!.\n";
+}
 
 int main()
 {
-    vector<Estudiante> estudiantes; // Se crea un vector para almacenar estudiantes
-    int opcion = 0;                 // Variable para almacenar la opción del usuario en el menú
+    vector<Estudiante> estudiantes;
+    ListaDoble listaEstudiantes;
+    Nodo *actual = nullptr; // Para navegación en la lista doblemente ligada
+    int opcion;
 
     do
     {
-        // Menú principal
-        cout << "\n--- Sistema de Gestión de Estudiantes ---\n";
-        cout << "1. Agregar Estudiante\n";
-        cout << "2. Eliminar Estudiante\n";
-        cout << "3. Modificar Estudiante\n";
-        cout << "4. Buscar Estudiante\n";
-        cout << "5. Ordenar Estudiantes por Nombre\n";
-        cout << "6. Ordenar Estudiantes por Calificación\n";
-        cout << "7. Mostrar Todos los Estudiantes\n";
+        cout << "\nMenu principal:\n";
+        cout << "1. Agregar estudiante al registro\n";
+        cout << "2. Agregar estudiante a la lista\n";
+        cout << "3. Mostrar registro de estudiantes\n";
+        cout << "4. Mostrar estudiantes de la lista\n";
+        cout << "5. Ordenar estudiantes por nombre (alfabéticamente)\n";
+        cout << "6. Ordenar estudiantes por calificación\n";
+        cout << "7. Siguiente estudiante en la lista \n";
+        cout << "8. Estudiante anterior en la lista\n";
         cout << "0. Salir\n";
-        cout << "Seleccione una opción: ";
-        cin >> opcion; // Se lee la opción seleccionada por el usuario
+        cout << "Selecciona una opción: ";
+        cin >> opcion;
 
-        // Estructura switch para gestionar las opciones seleccionadas por el usuario
         switch (opcion)
         {
         case 1:
-            agregarEstudiante(estudiantes); // Llama a la función para agregar un estudiante
+            agregarEstudiante(estudiantes); // Función original para agregar al vector
             break;
         case 2:
         {
-            int matricula;
-            cout << "Ingrese la matrícula del estudiante a eliminar: ";
-            cin >> matricula;                           // Se solicita la matrícula del estudiante a eliminar
-            eliminarEstudiante(estudiantes, matricula); // Se llama a la función para eliminar
+            Estudiante nuevo;
+            cout << "Ingrese nombre: ";
+            cin >> nuevo.nombre;
+            cout << "Ingrese matrícula: ";
+            cin >> nuevo.matricula;
+            cout << "Ingrese calificación: ";
+            cin >> nuevo.calificacion;
+            listaEstudiantes.agregarEstudiante(nuevo);
+            if (!actual)
+                actual = listaEstudiantes.getCabeza(); // Iniciar la navegación si es el primer estudiante
             break;
         }
         case 3:
-        {
-            int matricula;
-            cout << "Ingrese la matrícula del estudiante a modificar: ";
-            cin >> matricula;                            // Se solicita la matrícula del estudiante a modificar
-            modificarEstudiante(estudiantes, matricula); // Se llama a la función para modificar
+            mostrarEstudiantes(estudiantes); // Mostrar estudiantes del vector
             break;
-        }
         case 4:
-        {
-            int matricula;
-            cout << "Ingrese la matrícula del estudiante a buscar: ";
-            cin >> matricula;                         // Se solicita la matrícula del estudiante a buscar
-            buscarEstudiante(estudiantes, matricula); // Se llama a la función para buscar
+            listaEstudiantes.mostrarEstudiantes(); // Mostrar estudiantes de la lista doblemente ligada
             break;
-        }
         case 5:
-            ordenarPorNombre(estudiantes); // Llama a la función para ordenar por nombre
+            bubbleSortNombre(estudiantes);   // Ordenar estudiantes por nombre
+            mostrarEstudiantes(estudiantes); // Mostrar estudiantes ordenados
             break;
         case 6:
-            ordenarPorCalificacion(estudiantes); // Llama a la función para ordenar por calificación
+            bubbleSortCalificacion(estudiantes); // Ordenar estudiantes por calificación
+            mostrarEstudiantes(estudiantes);     // Mostrar estudiantes ordenados
             break;
         case 7:
-            mostrarEstudiantes(estudiantes); // Llama a la función para mostrar todos los estudiantes
+            if (actual)
+                listaEstudiantes.siguiente(actual); // Navegar al siguiente estudiante
+            else
+                cout << "La lista está vacía o no se ha ingresado ningún estudiante.\n";
+            break;
+        case 8:
+            if (actual)
+                listaEstudiantes.anterior(actual); // Navegar al estudiante anterior
+            else
+                cout << "La lista está vacía o no se ha ingresado ningún estudiante.\n";
             break;
         case 0:
-            cout << "Saliendo del programa...\n"; // Opción para salir del programa
+            cout << "Saliendo del programa...\n";
             break;
         default:
-            cout << "Opción inválida, intente de nuevo.\n"; // Mensaje para opción inválida
+            cout << "Opción inválida, intente nuevamente.\n";
             break;
         }
-    } while (opcion != 0); // Repite el menú mientras la opción no sea salir (0)
+    } while (opcion != 0);
 
-    return 0; // Fin del programa
+    return 0;
 }
