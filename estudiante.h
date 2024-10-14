@@ -6,7 +6,8 @@
 #include <string>
 
 using namespace std;
-
+//Cesar Augusto Ramirez Davila 
+//A01712439
 // Estructura Estudiante, almacena la información de cada estudiante
 struct Estudiante
 {
