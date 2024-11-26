@@ -5,8 +5,8 @@
 Este proyecto es un **Sistema de Gestión de Estudiantes** desarrollado en C++ que permite agregar, modificar, eliminar, buscar, ordenar y visualizar registros de estudiantes. Cada registro incluye el **nombre** y **calificación** de los estudiantes, y todas las operaciones se ejecutan desde la terminal utilizando la estructura dinámica `vector` para almacenar los registros.
 
 ### Funcionalidades Principales:
-1. **Agregar Estudiantes**: Permite ingresar un nuevo estudiante con su nombre, matrícula y calificación.
-2. **Eliminar Estudiantes**: Elimina un estudiante buscando por su matrícula.
+1. **Agregar Estudiantes**: Permite ingresar un nuevo estudiante con su nombre y calificación.
+2. **Eliminar Estudiantes**: Elimina un estudiante buscando por su nombre.
 3. **Modificar Estudiantes**: Actualiza los datos de un estudiante existente.
 5. **Ordenar Estudiantes**:
    - **Por Calificación**: Ordena a los estudiantes de menor a mayor calificación utilizando **Merge sort**.
