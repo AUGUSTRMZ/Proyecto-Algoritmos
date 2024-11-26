@@ -8,10 +8,8 @@ Este proyecto es un **Sistema de Gestión de Estudiantes** desarrollado en C++ q
 1. **Agregar Estudiantes**: Permite ingresar un nuevo estudiante con su nombre, matrícula y calificación.
 2. **Eliminar Estudiantes**: Elimina un estudiante buscando por su matrícula.
 3. **Modificar Estudiantes**: Actualiza los datos de un estudiante existente.
-4. **Buscar Estudiantes**: Busca un estudiante por matrícula y muestra su información.
 5. **Ordenar Estudiantes**:
-   - **Por Nombre**: Ordena a los estudiantes alfabéticamente utilizando **Bubble Sort**.
-   - **Por Calificación**: Ordena a los estudiantes de mayor a menor calificación utilizando **Bubble Sort**.
+   - **Por Calificación**: Ordena a los estudiantes de menor a mayor calificación utilizando **Merge sort**.
 6. **Mostrar Todos los Estudiantes**: Imprime una lista de todos los estudiantes registrados en el sistema.
 
 ---
