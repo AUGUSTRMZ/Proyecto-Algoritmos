@@ -2,7 +2,7 @@
 
 ## Descripción del Proyecto
 
-Este proyecto es un **Sistema de Gestión de Estudiantes** desarrollado en C++ que permite agregar, modificar, eliminar, buscar, ordenar y visualizar registros de estudiantes. Cada registro incluye el **nombre**, **matrícula** y **calificación** de los estudiantes, y todas las operaciones se ejecutan desde la terminal utilizando la estructura dinámica `vector` para almacenar los registros.
+Este proyecto es un **Sistema de Gestión de Estudiantes** desarrollado en C++ que permite agregar, modificar, eliminar, buscar, ordenar y visualizar registros de estudiantes. Cada registro incluye el **nombre** y **calificación** de los estudiantes, y todas las operaciones se ejecutan desde la terminal utilizando la estructura dinámica `vector` para almacenar los registros.
 
 ### Funcionalidades Principales:
 1. **Agregar Estudiantes**: Permite ingresar un nuevo estudiante con su nombre, matrícula y calificación.
