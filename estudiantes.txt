@@ -1,5 +1,5 @@
-mariana,1
-jose,4.5
-ximena,5
-cesar,7
-oscarin,7.7
+mariana,10
+jose,7.5
+ximena,5.4
+cesar,9.5
+oscar,3.7
