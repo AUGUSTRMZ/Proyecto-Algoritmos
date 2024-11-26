@@ -7,9 +7,9 @@
 #include <thread>
 #include <sstream>
 #include <stdexcept>
+#include <fstream>
 
 using namespace std;
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -30,37 +30,7 @@ struct Node // Nodos de la lista enlazada
   Node(string nom, float calif) : nombre(nom), calificacion(calif), sig(nullptr), ant(nullptr) {}
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Node *merge(Node *left, Node *right) // merge sort para la lista doblemente ligada
-{
-  if (!left)
-  {
-    return right;
-  }
-  if (!right)
-  {
-    return left;
-  }
-  // seleccion del nodo menor como cabeza de la lista
-  if (left->calificacion <= right->calificacion)
-  {
-    left->sig = merge(left->sig, right);
-    left->sig->ant = left;
-    left->ant = nullptr;
-    return left;
-  }
-  else
-  {
-    right->sig = merge(left, right->sig);
-    right->sig->ant = right;
-    right->ant = nullptr;
-    return right;
-  }
-}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Node *split(Node *head) {}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Node *mergesort(Node *head) {}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void merge_estudiantes(vector<Estudiante> &estudiantes);
 
 class ListDubl
 {
@@ -106,96 +76,73 @@ public:
   }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  void actualizarEstudiante()
+  void actualizarEstudiante(vector<Estudiante> &estudiantes)
   {
-    if (head == nullptr) // si la lista esta vacia
+    string nombreBuscar; // se busca al estudiante por nombre
+    cout << "Ingrese el nombre del estudiante que desea actualizar: ";
+    cin.ignore();
+    getline(cin, nombreBuscar);
+
+    bool found = false;           // bandera que indica si el estudiante fue encontrado, esta en false por defecto
+    for (auto &est : estudiantes) // recorrer todo el vector de estudiantes
     {
-      cout << "No hay estudiantes registrados en la lista" << endl;
-      return;
+      if (est.nombre == nombreBuscar) // si el nombre del estudiante actual es igual al que se busca
+      {
+        found = true;                                                        // la bandera cambia a true
+        cout << "Ingrese la nueva calificacion para " << est.nombre << ": "; // se pide la nueva calificacion
+        cin >> est.calificacion;                                             // se recibe la nueva calificacion
+        break;
+      }
     }
-
-    int index;
-    cout << "Ingresa el indice del estudiante a actualizar: ";
-    cin >> index;
-
-    Node *actual = head; // iniciamos en la cabeza de la lista
-    int actIndex = 0;    // indice actual
-
-    while (actual != nullptr && actIndex < index) // mientras que el ndo actual no este vacio y el indice actual sea menor al indice que se esta buscando
+    if (found) // cuando la bandera este en true
     {
-      actual = actual->sig;
-      ++actIndex;
-    }
-    if (actual == nullptr) // el indice esta fuera de rango
-    {
-      throw out_of_range("Indice fuera del rango");
-      return;
-    }
-
-    // solicia la nueva calificacion del alumno
-    float Ncalificacion;
-    cout << "Ingese la nueva calificacion para " << actual->nombre << ": ";
-    cin >> Ncalificacion;
-
-    // Actualiza la nueva calificacion
-    actual->calificacion = Ncalificacion;
-    // mensaje de confirmacion con la nueva calificacion ingresada
-    cout << endl;
-    cout << "Calificacion actualizada para " << actual->nombre << endl;
-    cout << "Su nueva calificacion es: " << actual->calificacion << endl;
-    merge_estudiantes();
-  }
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  void eliminarEstudiante()
-  {
-    if (head == nullptr) // si la lista esta vacia
-    {
-      cout << "No hay estudiantes registrados en la lista" << endl;
-      return;
-    }
-    int index;
-    cout << "Ingrese el indice del estudiante que desea eliminar: ";
-    cin >> index;
-
-    Node *actual = head; // iniciamos la lista en la cabeza
-    int actIndex = 0;    // indice actual de busqueda
-
-    // Recorrer la lista hasta encontrar el indice que se busca
-    while (actual != nullptr && actIndex < index) // mientras no se llegue al final de la lista y el indice actual no sea el que se busca
-    {
-      actual = actual->sig;
-      ++actIndex;
-    }
-    if (actual == nullptr) // si el indice esta fuera del rango
-    {
-      throw out_of_range("Indice fuera del rango de la lista");
-      return;
-    }
-
-    // Ajuste de punteros hacia atras
-    if (actual->ant != nullptr) // si el nodo no es el primero de la lista
-    {
-      actual->ant->sig = actual->sig; // el actual se vuelve el previo y se conecta al siguiente
+      merge_estudiantes(estudiantes);     // se vuelve a ordenar el vector ahora actualizado
+      *this = ListDubl();                 // limpia la lista doble actual
+      for (const auto &est : estudiantes) // recorre todo el vector de estudiantes
+      {
+        insert(est.nombre, est.calificacion); // se inserta el nuevo vector reordenado
+      }
+      cout << "Estudiante actualizado y base de datos organizada exitosamente" << endl;
     }
     else
     {
-      head = actual->sig; // actualiza la cabeza de la lista si era el primero
+      cout << "Estudiante no encontrado" << endl;
     }
-    // Ajuste de punteros hacia adelante
-    if (actual->sig != nullptr) // si el nodo no es el ultimo
-    {
-      actual->sig->ant = actual->ant; // el actual se vuelvel siguiente y se conecta al anterior
-    }
-    else // si es el ultimo
-    {
-      tail = actual->ant; // actualiza la cola de la lista
-    }
-
-    // Libera la memoria del nodo eliminado
-    delete actual;
-    cout << "Estudiante " << actual->nombre << " eliminado con exito" << endl;
   }
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  void eliminarEstudiante(vector<Estudiante> &estudiantes)
+  {
+    string nombreBuscar;                                     // se busca al estudiante por nombre
+    cout << "Ingrese el nombre del estudiante a eliminar: "; // se pide el nombre del estudiante
+    cin.ignore();
+    getline(cin, nombreBuscar); // se recibe el nombre del estudiante
+
+    bool found = false;                                                // bandera que me indica si alumno fue encontrado
+    for (auto it = estudiantes.begin(); it != estudiantes.end(); ++it) // uso de iteradores para mantenerse buscando solo dentro del vector
+    {
+      if (it->nombre == nombreBuscar) // si el nombre actual es del alumno que se desea eliminar
+      {
+        estudiantes.erase(it); // Elimina el estudiante al que apunta el iterador del vector
+        found = true;          // la bandera cambia a true
+        break;                 // el bucle termina cuando se elimina el estudiantes
+      }
+    }
+    if (found) // si la bandera es true
+    {
+      merge_estudiantes(estudiantes);     // reordena el vector de estudiantes nuevamente
+      *this = ListDubl();                 // reinicia la lista
+      for (const auto &est : estudiantes) // recorre todo el vector estudiantes
+      {
+        insert(est.nombre, est.calificacion); // inserta los nuevos datos en la lista
+      }
+      cout << "Estudiante eliminado y base de datos organizada exitosamente" << endl;
+    }
+    else
+    {
+      cout << "Estudiante no encontrado" << endl;
+    }
+  }
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   void next()
@@ -238,7 +185,7 @@ void animacionMensaje(string mensaje) // Mensaje de saliendo del sistema con ani
     this_thread::sleep_for(chrono::milliseconds(100)); // pausa de 100 milisegundos entre caracter
   }
   cout << endl; // salto de linea despues del mensaje
-};
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void ingresarDatos(vector<Estudiante> &estudiantes)
 {
@@ -256,12 +203,11 @@ void ingresarDatos(vector<Estudiante> &estudiantes)
     cin >> estudiante.calificacion;
     estudiantes.push_back(estudiante); // Agrego los estudiantes ingresados al vector
   }
-};
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // llamada a las funciones antes de para poder usarlas sin problemas
 void mergeRecursion_estudiantes(vector<Estudiante> &estudiantes, int left, int right);
 void mergeSorted_estudiantes(vector<Estudiante> &estudiantes, int left, int middle, int right);
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*
@@ -350,10 +296,56 @@ void mergeSorted_estudiantes(vector<Estudiante> &estudiantes, int left, int midd
     k++;
   }
 }
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void searchEstudiante() {}
+void loadTXT(const string &txt_name, vector<Estudiante> &estudiantes) // carga los datos desde el archivo usando el nombre del archivo como parametro string y usando el vector de estudiantes
+{
+  ifstream file(txt_name); // abre el archivo en modo lectura
+  if (!file.is_open())     // Verifica si se abrio correctamente
+  {
+    cout << "No se pudo abrir el archivo " << txt_name << endl; // si no se abrio pues sale esto
+    return;
+  }
+
+  estudiantes.clear(); // limpia el vector antes de cargar cualquier dato nuevo
+  string line;
+
+  while (getline(file, line)) // leer linea por linea
+  {
+    stringstream ss(line);
+    string nombre;
+    float calificacion;
+
+    // Leer nombre y calificacion separados por coma
+    getline(ss, nombre, ','); // leer nombre hasta la coma
+    ss >> calificacion;       // leer la calificacion
+
+    // Agregar al vector
+    Estudiante est;
+    est.nombre = nombre;
+    est.calificacion = calificacion;
+    estudiantes.push_back(est);
+  }
+  file.close(); // cerrar el archivo
+  cout << "Datos cargados desde " << txt_name << "Exitosamente" << endl;
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// guarda los datos en archivo con el nombre del archivo y el vector estudiantes
+void saveOnFile(const string &txt_name, const vector<Estudiante> &estudiantes)
+{
+  ofstream file(txt_name); // Arbre el archivo en modo escritura
+  if (!file.is_open())     // verificar que se abra bien el archivo
+  {
+    cout << "No se pudo abrir el archivo" << txt_name << endl;
+    return;
+  }
+  for (const auto &est : estudiantes) // recorre todo el vector estudiantes
+  {
+    file << est.nombre << "," << est.calificacion << endl; // escribir en el formato "nombre, calificacion"
+  }
+  file.close(); // cerrar el archivo
+  cout << "Datos guardados en " << txt_name << " exitosamente." << endl;
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*
@@ -361,8 +353,10 @@ FUNCION que despliega el menu principal para visualizar el funcionamiento del pr
 */
 void main_menu()
 {
-  vector<Estudiante> estudiantes; // vector que almacena la informacion ingresada
-  ListDubl lista;                 // lista doblemente enlazada para almacenar informacion ingresada
+  vector<Estudiante> estudiantes;          // vector que almacena la informacion ingresada
+  ListDubl lista;                          // lista doblemente enlazada para almacenar informacion ingresada
+  loadTXT("estudiantes.txt", estudiantes); // cargo los datos del txt
+
   int eleccion;
 
   do
@@ -385,6 +379,7 @@ void main_menu()
     {
     case 1:
       ingresarDatos(estudiantes);
+      saveOnFile("estudiantes.txt", estudiantes);
       break;
     case 2:
       if (estudiantes.empty())
@@ -407,6 +402,7 @@ void main_menu()
       {
         merge_estudiantes(estudiantes);
         cout << "Estudiantes ordenados con exito" << endl;
+        saveOnFile("estudiantes.txt", estudiantes);
         break;
       }
     case 4:
@@ -483,13 +479,30 @@ void main_menu()
       }
       break;
     case 6:
-      lista.actualizarEstudiante();
+      if (estudiantes.empty())
+      {
+        cout << "No hay estudiantes registrados" << endl;
+      }
+      else
+      {
+        lista.actualizarEstudiante(estudiantes);
+        saveOnFile("estudiantes.txt", estudiantes);
+      }
       break;
     case 7:
-      lista.eliminarEstudiante();
+      if (estudiantes.empty())
+      {
+        cout << "No hay estudiantes registrados" << endl;
+      }
+      else
+      {
+        lista.eliminarEstudiante(estudiantes);
+        saveOnFile("estudiantes.txt", estudiantes);
+      }
       break;
     case 8:
-      animacionMensaje("Saliendo del sistema...");
+      saveOnFile("estudiantes.txt", estudiantes);
+      animacionMensaje("Datos guardados, saliendo del sistema...");
       break;
 
     default:
