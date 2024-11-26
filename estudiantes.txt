@@ -3,3 +3,9 @@ jose,7.5
 ximena,5.4
 cesar,9.5
 oscar,3.7
+Emilio,7.7
+Emiliano,8.8
+Luis,4.5
+Samantha,6.7
+Leila,3.4
+Natalia,7.8
