@@ -3,7 +3,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <chrono>
 #include <thread>
 #include <sstream>
 #include <stdexcept>
@@ -467,7 +466,7 @@ void main_menu()
             }
             break;
           case 'c':
-            animacionMensaje("Volviendo al menu principal...");
+            cout << "Volviendo al menu principal..." << endl;
             break;
 
           default:
@@ -502,7 +501,7 @@ void main_menu()
       break;
     case 8:
       saveOnFile("estudiantes.txt", estudiantes);
-      animacionMensaje("Datos guardados, saliendo del sistema...");
+      cout << "Datos guardados, saliendo del sistema..." << endl;
       break;
 
     default:
